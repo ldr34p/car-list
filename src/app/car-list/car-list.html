@@ -1,0 +1,84 @@
+<div class="page">
+  <header class="header">
+    <h1>Car List</h1>
+  </header>
+
+  <section class="card">
+    <h2>Add a car</h2>
+    <p class="error" *ngIf="errorMsg">{{ errorMsg }}</p>
+
+    <div class="form">
+      <label>
+        Brand
+        <input [(ngModel)]="brand">
+      </label>
+
+      <label>
+        Model
+        <input [(ngModel)]="model">
+      </label>
+
+      <label>
+        Year
+        <input type="number" [(ngModel)]="year">
+      </label>
+
+      <label>
+        Color
+        <input [(ngModel)]="color">
+      </label>
+
+      <button (click)="addCar()">Add</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Overview</h2>
+
+    <div class="stats">
+      <div><b>Total:</b> {{ totalCount }}</div>
+      <div><b>Available:</b> {{ availableCount }}</div>
+      <div><b>Sold:</b> {{ soldCount }}</div>
+    </div>
+
+    <div class="filters">
+      <button (click)="setFilter('All')" [class.active]="filter === 'All'">All</button>
+      <button (click)="setFilter('Available')" [class.active]="filter === 'Available'">Available</button>
+      <button (click)="setFilter('Sold')" [class.active]="filter === 'Sold'">Sold</button>
+
+      <button class="danger" (click)="clearGarage()" [disabled]="cars.length === 0">
+        Clear list
+      </button>
+    </div>
+  </section>
+
+  <section class="card empty" *ngIf="cars.length === 0">
+    <h2>No cars yet</h2>
+    <p>Add a car to your list.</p>
+  </section>
+
+  <section class="list" *ngIf="cars.length > 0">
+    <div class="car-card" *ngFor="let car of filteredCars; trackBy: trackById">
+      <div class="left">
+        <div class="title">{{ car.brand }} {{ car.model }} ({{ car.year }})</div>
+        <div class="meta">
+          Color: <span class="pill">{{ car.color }}</span>
+        </div>
+
+        <div class="badge sold" *ngIf="car.sold">SOLD</div>
+      </div>
+
+      <div class="actions">
+        <button (click)="toggleSold(car.id)">
+          {{ car.sold ? 'Mark available' : 'Mark sold' }}
+        </button>
+        <button class="danger" (click)="deleteCar(car.id)">Delete</button>
+      </div>
+    </div>
+
+    <div class="card empty" *ngIf="filteredCars.length === 0">
+      <h2>No cars match this filter</h2>
+      <p>Change the filter to see other cars.</p>
+    </div>
+  </section>
+</div>
